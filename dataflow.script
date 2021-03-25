@@ -4,7 +4,7 @@ source(output(
 		{Main Director} as string
 	),
 	allowSchemaDrift: true,
-	validateSchema: false,
+	validateSchema: true,
 	ignoreNoFilesFound: false) ~> source1
 source1 aggregate(groupBy(mycols = sha2(256,columns())),
 	each(match(true()), $$ = first($$))) ~> DistinctRows
@@ -17,20 +17,15 @@ LookForNULLs@noNULLs select(mapColumn(
 	),
 	skipDuplicateMapInputs: true,
 	skipDuplicateMapOutputs: true) ~> Select1
-LookForNULLs@hasNULLs sink(input(
-		Column_1 as string,
-		Column_2 as string,
-		Column_3 as string
-	),
-	allowSchemaDrift: true,
-	validateSchema: false) ~> sink2
 Select1 sink(allowSchemaDrift: true,
+	validateSchema: false,
+	skipDuplicateMapInputs: true,
+	skipDuplicateMapOutputs: true,
+	saveOrder: 1) ~> sink1
+LookForNULLs@hasNULLs sink(allowSchemaDrift: true,
 	validateSchema: false,
 	deletable:false,
 	insertable:true,
 	updateable:false,
 	upsertable:false,
-	format: 'document',
-	skipDuplicateMapInputs: true,
-	skipDuplicateMapOutputs: true,
-	saveOrder: 1) ~> cache
+	format: 'document') ~> sink2

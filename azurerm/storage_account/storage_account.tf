@@ -1,4 +1,11 @@
-resource "azurerm_storage_account" "tfer--axelstorage002" {
+resource "random_string" "random_storage" {
+  length = 10
+  special = false
+  upper = false
+  number = false
+}
+
+resource "azurerm_storage_account" "storage" {
   access_tier               = "Hot"
   account_kind              = "StorageV2"
   account_replication_type  = "LRS"
@@ -8,7 +15,7 @@ resource "azurerm_storage_account" "tfer--axelstorage002" {
   is_hns_enabled            = "false"
   location                  = "eastus"
   min_tls_version           = "TLS1_2"
-  name                      = "axelstorage002"
+  name                      = random_string.random_storage.result
 
   network_rules {
     bypass         = ["AzureServices"]
@@ -39,5 +46,5 @@ resource "azurerm_storage_account" "tfer--axelstorage002" {
     }
   }
 
-  resource_group_name = data.terraform_remote_state.resource_group.outputs.azurerm_resource_group_tfer--rg_name
+  resource_group_name = var.rg
 }

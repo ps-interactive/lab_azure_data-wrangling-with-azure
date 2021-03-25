@@ -1,4 +1,11 @@
-resource "azurerm_cosmosdb_account" "tfer--axelcosmosdb002" {
+resource "random_string" "random_cosmosdb" {
+  length = 10
+  special = false
+  upper = false
+  number = false
+}
+
+resource "azurerm_cosmosdb_account" "cosmosdb" {
   analytical_storage_enabled = "false"
 
   consistency_policy {
@@ -8,7 +15,7 @@ resource "azurerm_cosmosdb_account" "tfer--axelcosmosdb002" {
   }
 
   enable_automatic_failover       = "false"
-  enable_free_tier                = "true"
+  enable_free_tier                = "false"
   enable_multiple_write_locations = "false"
 
   geo_location {
@@ -20,10 +27,11 @@ resource "azurerm_cosmosdb_account" "tfer--axelcosmosdb002" {
   is_virtual_network_filter_enabled = "false"
   kind                              = "GlobalDocumentDB"
   location                          = "eastus"
-  name                              = "axelcosmosdb002"
+  name                              = "cosmosdb${random_string.random_cosmosdb.result}"
   offer_type                        = "Standard"
   public_network_access_enabled     = "true"
-  resource_group_name               = data.terraform_remote_state.resource_group.outputs.azurerm_resource_group_tfer--rg_name
+  resource_group_name               = var.rg
+//  resource_group_name               = data.terraform_remote_state.resource_group.outputs.azurerm_resource_group_rg_name
 
   tags = {
     CosmosAccountType = "Non-Production"

@@ -1,11 +1,11 @@
-resource "azurerm_storage_container" "tfer--failed" {
+resource "azurerm_storage_container" "failed" {
   container_access_type = "private"
   name                  = "failed"
-  storage_account_name  = data.terraform_remote_state.storage_account.outputs.azurerm_storage_account_tfer--axelstorage002_name
+  storage_account_name  = var.sa
 }
 
-resource "azurerm_storage_container" "tfer--source" {
+resource "azurerm_storage_container" "source" {
   container_access_type = "private"
   name                  = "source"
-  storage_account_name  = data.terraform_remote_state.storage_account.outputs.azurerm_storage_account_tfer--axelstorage002_name
+  storage_account_name  = var.sa
 }
